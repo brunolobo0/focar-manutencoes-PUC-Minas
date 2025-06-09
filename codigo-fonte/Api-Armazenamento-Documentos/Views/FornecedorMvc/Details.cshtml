@@ -1,0 +1,638 @@
+﻿@model Api_Orcamento.ViewsModel.FornecedorViewModel
+@{
+    ViewData["Title"] = "Detalhes do Fornecedor";
+}
+
+<style>
+    :root {
+        --primary: #222831;
+        --secondary: #75ABAE;
+        --light: #f5f5f5;
+        --dark: #1a1f25;
+        --text: #333333;
+        --text-light: #ffffff;
+        --border: #e0e0e0;
+        --hover: #63999c;
+        --sidebar-bg: #1d232a;
+        --menu-hover: #2e3942;
+        --fornecedor-accent: #5D8A73;
+        --fornecedor-light: #EEF5F0;
+        --fornecedor-hover: #4A7062;
+    }
+
+    body {
+        background-color: #f5f7fa;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+        color: var(--text);
+    }
+
+    /* Layout principal */
+    .main-container {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    /* Cabeçalho superior geral */
+    .top-header-container {
+        background-color: var(--primary);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 200;
+    }
+
+    .top-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        height: 60px;
+        max-width: 1400px;
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    .logo-area {
+        display: flex;
+        align-items: center;
+    }
+
+    .logo-placeholder {
+        display: flex;
+        align-items: center;
+    }
+
+    .logo-image {
+        width: 40px;
+        height: 40px;
+        background-color: var(--secondary);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 12px;
+    }
+
+        .logo-image i {
+            color: white;
+            font-size: 20px;
+        }
+
+    .logo-text {
+        color: var(--text-light);
+        font-weight: bold;
+        letter-spacing: 1px;
+        font-size: 18px;
+    }
+
+    .user-actions a {
+        color: var(--text-light);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        padding: 8px 15px;
+        border-radius: 5px;
+        transition: all 0.3s;
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+        .user-actions a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+    .user-actions i {
+        margin-right: 5px;
+    }
+
+    /* Conteúdo principal com sidebar */
+    .content-wrapper {
+        display: flex;
+        flex: 1;
+        margin-top: 60px;
+    }
+
+    /* Sidebar */
+    .sidebar {
+        width: 250px;
+        background-color: var(--sidebar-bg);
+        color: var(--text-light);
+        position: fixed;
+        height: calc(100vh - 60px);
+        left: 0;
+        top: 60px;
+        z-index: 100;
+        box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s;
+    }
+
+    .sidebar-menu {
+        padding: 20px 0;
+    }
+
+    .sidebar-header {
+        padding: 0 20px 15px 20px;
+        margin-bottom: 15px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+        .sidebar-header h3 {
+            color: var(--secondary);
+            font-size: 16px;
+            margin: 0;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+    .menu-item {
+        padding: 12px 20px;
+        display: flex;
+        align-items: center;
+        color: var(--text-light);
+        text-decoration: none;
+        transition: all 0.3s;
+        border-left: 4px solid transparent;
+        margin-bottom: 5px;
+    }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: var(--menu-hover);
+            border-left-color: var(--secondary);
+        }
+
+        .menu-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+            font-size: 18px;
+            color: var(--secondary);
+        }
+
+        .menu-item.active i {
+            color: white;
+        }
+
+    /* Conteúdo principal */
+    .content {
+        flex: 1;
+        margin-left: 250px;
+        padding: 20px;
+        transition: all 0.3s;
+        display: flex;
+        flex-direction: column;
+        min-height: calc(100vh - 60px);
+    }
+
+    /* Conteúdo da página */
+    .page-content {
+        flex: 1;
+    }
+
+    /* Estilos para a página de detalhes */
+    .details-container {
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    .page-header {
+        margin-bottom: 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .page-title {
+        font-weight: 600;
+        color: var(--primary);
+        font-size: 24px;
+        position: relative;
+        padding-left: 15px;
+        margin: 0;
+    }
+
+        .page-title:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 5px;
+            height: 24px;
+            width: 5px;
+            background: var(--fornecedor-accent);
+            border-radius: 3px;
+        }
+
+    .btn {
+        display: inline-block;
+        font-weight: 500;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        user-select: none;
+        border: 1px solid transparent;
+        padding: 10px 20px;
+        font-size: 16px;
+        line-height: 1.5;
+        border-radius: 6px;
+        transition: all 0.15s ease-in-out;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .btn-primary {
+        background-color: var(--fornecedor-accent);
+        border-color: var(--fornecedor-accent);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 10px rgba(93, 138, 115, 0.25);
+    }
+
+        .btn-primary:hover {
+            background-color: var(--fornecedor-hover);
+            border-color: var(--fornecedor-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(93, 138, 115, 0.35);
+        }
+
+    .btn-secondary {
+        background-color: #f8f9fa;
+        border-color: #d3d9df;
+        color: #6c757d;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .btn-secondary:hover {
+            background-color: #e2e6ea;
+            border-color: #c1c9d0;
+            transform: translateY(-2px);
+        }
+
+    .btn-edit {
+        background-color: #f0ad4e;
+        border-color: #f0ad4e;
+        color: white;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 10px rgba(240, 173, 78, 0.25);
+    }
+
+        .btn-edit:hover {
+            background-color: #ec971f;
+            border-color: #ec971f;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(240, 173, 78, 0.35);
+        }
+
+    .btn i {
+        margin-right: 8px;
+    }
+
+    /* Rodapé */
+    .footer {
+        margin-top: auto;
+        padding: 15px 0;
+        background-color: #ffffff;
+        border-top: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 14px;
+        text-align: center;
+        color: #6e7a8a;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 0;
+        margin-bottom: 20px;
+        list-style: none;
+        background-color: transparent;
+    }
+
+    .breadcrumb-item {
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        color: #6c757d;
+    }
+
+        .breadcrumb-item a {
+            color: var(--fornecedor-accent);
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+            .breadcrumb-item a:hover {
+                color: var(--fornecedor-hover);
+                text-decoration: underline;
+            }
+
+        .breadcrumb-item + .breadcrumb-item {
+            padding-left: 8px;
+        }
+
+            .breadcrumb-item + .breadcrumb-item::before {
+                display: inline-block;
+                padding-right: 8px;
+                color: #6c757d;
+                content: "/";
+            }
+
+        .breadcrumb-item.active {
+            color: #6c757d;
+        }
+
+    /* Detalhes do fornecedor */
+    .details-content {
+        margin-top: 20px;
+    }
+
+    .details-section {
+        margin-bottom: 30px;
+    }
+
+    .section-title {
+        font-size: 18px;
+        color: var(--fornecedor-accent);
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--fornecedor-light);
+    }
+
+    .detail-item {
+        margin-bottom: 15px;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .detail-label {
+        flex: 0 0 200px;
+        font-weight: 500;
+        color: var(--primary);
+        padding-right: 15px;
+    }
+
+    .detail-value {
+        flex: 1;
+        color: var(--text);
+    }
+
+        .detail-value a {
+            color: var(--fornecedor-accent);
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+            .detail-value a:hover {
+                color: var(--fornecedor-hover);
+                text-decoration: underline;
+            }
+
+    .detail-value-empty {
+        color: #8a94a6;
+        font-style: italic;
+    }
+
+    .detail-group {
+        background-color: var(--fornecedor-light);
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 25px;
+    }
+
+    .detail-header {
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+    }
+
+    .detail-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: var(--fornecedor-accent);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+    }
+
+        .detail-icon i {
+            color: white;
+            font-size: 24px;
+        }
+
+    .detail-title {
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--fornecedor-accent);
+        margin: 0;
+    }
+
+    .detail-badge {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 500;
+        background-color: var(--fornecedor-light);
+        color: var(--fornecedor-accent);
+        border: 1px solid var(--fornecedor-accent);
+    }
+
+    .actions-row {
+        margin-top: 30px;
+        display: flex;
+        gap: 10px;
+    }
+
+ </style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<div class="main-container">
+    <!-- Cabeçalho superior com logo e botão de sair -->
+    <div class="top-header-container">
+        <div class="top-header">
+            <div class="logo-area">
+                <div class="logo-placeholder">
+                    <div class="logo-image">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <div class="logo-text">FOCAR MANUTENÇÕES</div>
+                </div>
+            </div>
+            <div class="user-actions">
+                <a href="@Url.Action("Login", "Autenticacao")"><i class="fas fa-sign-out-alt"></i> Sair</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-wrapper">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h3>Menu Principal</h3>
+            </div>
+            <div class="sidebar-menu">
+                <a href="@Url.Action("Index", "OrcamentoMvc")" class="menu-item">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    <span>Orçamentos</span>
+                </a>
+                <a href="@Url.Action("Index", "SolicitacaoMvc")" class="menu-item">
+                    <i class="fas fa-folder"></i>
+                    <span>Solicitações</span>
+                </a>
+                <a href="@Url.Action("Index", "ProdutoMvc")" class="menu-item">
+                    <i class="fas fa-box"></i>
+                    <span>Produtos</span>
+                </a>
+                <a href="@Url.Action("Index", "FornecedorMvc")" class="menu-item active">
+                    <i class="fas fa-truck"></i>
+                    <span>Fornecedores</span>
+                </a>
+                <a href="@Url.Action("Index", "ClienteMvc")" class="menu-item">
+                    <i class="fas fa-user"></i>
+                    <span>Clientes</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Conteúdo principal -->
+        <div class="content">
+            <!-- Conteúdo da página -->
+            <div class="page-content">
+                <!-- Breadcrumb -->
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="@Url.Action("Index", "FornecedorMvc")"><i class="fas fa-home"></i> Início</a></li>
+                        <li class="breadcrumb-item"><a href="@Url.Action("Index", "FornecedorMvc")">Fornecedores</a></li>
+                        <li class="breadcrumb-item active">Detalhes do Fornecedor</li>
+                    </ol>
+                </nav>
+
+                <div class="page-header">
+                    <h2 class="page-title">Detalhes do Fornecedor</h2>
+                </div>
+
+                <div class="details-container">
+                    <div class="detail-header">
+                        <div class="detail-icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div>
+                            <h3 class="detail-title">@Model.NomeFantasia</h3>
+                            <span class="detail-badge">Fornecedor</span>
+                        </div>
+                    </div>
+
+                    <div class="details-content">
+                        <div class="detail-group">
+                            <div class="section-title"><i class="fas fa-info-circle"></i> Informações Gerais</div>
+
+                            <div class="detail-item">
+                                <div class="detail-label">Nome Fantasia</div>
+                                <div class="detail-value">@Model.NomeFantasia</div>
+                            </div>
+
+                            <div class="detail-item">
+                                <div class="detail-label">Razão Social</div>
+                                <div class="detail-value">@Model.RazaoSocial</div>
+                            </div>
+
+                            <div class="detail-item">
+                                <div class="detail-label">CNPJ</div>
+                                <div class="detail-value">@Model.Cnpj</div>
+                            </div>
+                        </div>
+
+                        <div class="detail-group">
+                            <div class="section-title"><i class="fas fa-id-card"></i> Documentação</div>
+
+                            <div class="detail-item">
+                                <div class="detail-label">Inscrição Estadual</div>
+                                <div class="detail-value">
+                                    @if (string.IsNullOrEmpty(Model.InscricaoEstadual))
+                                    {
+                                        <span class="detail-value-empty">Não informado</span>
+                                    }
+                                    else
+                                    {
+                                        @Model.InscricaoEstadual
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="detail-item">
+                                <div class="detail-label">Inscrição Municipal</div>
+                                <div class="detail-value">
+                                    @if (string.IsNullOrEmpty(Model.InscricaoMunicipal))
+                                    {
+                                        <span class="detail-value-empty">Não informado</span>
+                                    }
+                                    else
+                                    {
+                                        @Model.InscricaoMunicipal
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="detail-group">
+                            <div class="section-title"><i class="fas fa-address-book"></i> Contato</div>
+
+                            <div class="detail-item">
+                                <div class="detail-label">E-mail</div>
+                                <div class="detail-value">
+                                    <a href="mailto:@Model.Email">@Model.Email</a>
+                                </div>
+                            </div>
+
+                            <div class="detail-item">
+                                <div class="detail-label">Telefone</div>
+                                <div class="detail-value">@Model.Telefone</div>
+                            </div>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Model.Observacoes))
+                        {
+                            <div class="detail-group">
+                                <div class="section-title"><i class="fas fa-sticky-note"></i> Observações</div>
+
+                                <div class="detail-item">
+                                    <div class="detail-value">@Model.Observacoes</div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="actions-row">
+                        <a href="@Url.Action("Edit", "FornecedorMvc", new { id = Model.Id })" class="btn btn-edit">
+                            <i class="fas fa-edit"></i> Editar
+                        </a>
+                        <button type="button" class="btn btn-secondary" onclick="history.back()">
+                            <i class="fas fa-arrow-left"></i> Voltar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rodapé -->
+            <div class="footer">
+                <p>&copy; @DateTime.Now.Year - Focar Manutenções - Todos os direitos reservados</p>
+            </div>
+        </div>
+    </div>
+</div>

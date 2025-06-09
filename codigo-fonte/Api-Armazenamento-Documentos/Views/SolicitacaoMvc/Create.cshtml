@@ -1,0 +1,425 @@
+﻿@model Api_Orcamento.ViewModels.SolicitacaoViewModel
+@{
+    ViewData["Title"] = "Criar Nova Solicitação";
+}
+
+<style>
+    :root {
+        --primary: #222831;
+        --secondary: #75ABAE;
+        --light: #f5f5f5;
+        --dark: #1a1f25;
+        --text: #333333;
+        --text-light: #ffffff;
+        --border: #e0e0e0;
+        --hover: #63999c;
+        --sidebar-bg: #1d232a;
+        --menu-hover: #2e3942;
+    }
+
+    body {
+        background-color: #f5f7fa;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+        color: var(--text);
+    }
+
+    /* Layout principal */
+    .main-container {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    /* Cabeçalho superior geral */
+    .top-header-container {
+        background-color: var(--primary);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 200;
+    }
+
+    .top-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        height: 60px;
+        max-width: 1400px;
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    .logo-area {
+        display: flex;
+        align-items: center;
+    }
+
+    .logo-placeholder {
+        display: flex;
+        align-items: center;
+    }
+
+    .logo-image {
+        width: 40px;
+        height: 40px;
+        background-color: var(--secondary);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 12px;
+    }
+
+        .logo-image i {
+            color: white;
+            font-size: 20px;
+        }
+
+    .logo-text {
+        color: var(--text-light);
+        font-weight: bold;
+        letter-spacing: 1px;
+        font-size: 18px;
+    }
+
+    .user-actions a {
+        color: var(--text-light);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        padding: 8px 15px;
+        border-radius: 5px;
+        transition: all 0.3s;
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+        .user-actions a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+    .user-actions i {
+        margin-right: 5px;
+    }
+
+    /* Conteúdo principal com sidebar */
+    .content-wrapper {
+        display: flex;
+        flex: 1;
+        margin-top: 60px;
+    }
+
+    /* Sidebar */
+    .sidebar {
+        width: 250px;
+        background-color: var(--sidebar-bg);
+        color: var(--text-light);
+        position: fixed;
+        height: calc(100vh - 60px);
+        left: 0;
+        top: 60px;
+        z-index: 100;
+        box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s;
+    }
+
+    .sidebar-menu {
+        padding: 20px 0;
+    }
+
+    .sidebar-header {
+        padding: 0 20px 15px 20px;
+        margin-bottom: 15px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+        .sidebar-header h3 {
+            color: var(--secondary);
+            font-size: 16px;
+            margin: 0;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+    .menu-item {
+        padding: 12px 20px;
+        display: flex;
+        align-items: center;
+        color: var(--text-light);
+        text-decoration: none;
+        transition: all 0.3s;
+        border-left: 4px solid transparent;
+        margin-bottom: 5px;
+    }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: var(--menu-hover);
+            border-left-color: var(--secondary);
+        }
+
+        .menu-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+            font-size: 18px;
+            color: var(--secondary);
+        }
+
+        .menu-item.active i {
+            color: white;
+        }
+
+    /* Conteúdo principal */
+    .content {
+        flex: 1;
+        margin-left: 250px;
+        padding: 20px;
+        transition: all 0.3s;
+        display: flex;
+        flex-direction: column;
+        min-height: calc(100vh - 60px);
+    }
+
+    /* Conteúdo da página */
+    .page-content {
+        flex: 1;
+    }
+
+    .page-header {
+        padding-top: 20px;
+        margin-bottom: 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .page-title {
+        font-weight: 600;
+        color: var(--primary);
+        font-size: 24px;
+        position: relative;
+        padding-left: 15px;
+        margin: 0;
+    }
+
+        .page-title:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 5px;
+            height: 24px;
+            width: 5px;
+            background: var(--secondary);
+            border-radius: 3px;
+        }
+
+    /* Estilos para o formulário */
+    .form-container {
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: var(--primary);
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        font-size: 15px;
+        color: var(--text);
+        transition: all 0.3s;
+    }
+
+        .form-control:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(117, 171, 174, 0.25);
+            outline: none;
+        }
+
+    textarea.form-control {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    .btn {
+        display: inline-block;
+        font-weight: 500;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        user-select: none;
+        border: 1px solid transparent;
+        padding: 10px 20px;
+        font-size: 15px;
+        line-height: 1.5;
+        border-radius: 6px;
+        transition: all 0.15s ease-in-out;
+        text-decoration: none;
+        margin-right: 10px;
+    }
+
+    .btn-primary {
+        background-color: var(--secondary);
+        border-color: var(--secondary);
+        color: white;
+        box-shadow: 0 4px 10px rgba(117, 171, 174, 0.25);
+    }
+
+        .btn-primary:hover {
+            background-color: var(--hover);
+            border-color: var(--hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(117, 171, 174, 0.35);
+        }
+
+    .btn-secondary {
+        background-color: #e9ecef;
+        border-color: #dee2e6;
+        color: var(--text);
+    }
+
+        .btn-secondary:hover {
+            background-color: #dee2e6;
+            border-color: #ced4da;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+    .buttons-container {
+        margin-top: 30px;
+        display: flex;
+    }
+
+    /* Rodapé */
+    .footer {
+        margin-top: auto;
+        padding: 15px 0;
+        background-color: #ffffff;
+        border-top: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 14px;
+        text-align: center;
+        color: #6e7a8a;
+    }
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<div class="main-container">
+    <!-- Cabeçalho superior com logo e botão de sair -->
+    <div class="top-header-container">
+        <div class="top-header">
+            <div class="logo-area">
+                <div class="logo-placeholder">
+                    <div class="logo-image">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <div class="logo-text">FOCAR MANUTENÇÕES</div>
+                </div>
+            </div>
+            <div class="user-actions">
+                <a href="@Url.Action("Login", "Autenticacao")"><i class="fas fa-sign-out-alt"></i> Sair</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-wrapper">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h3>Menu Principal</h3>
+            </div>
+            <div class="sidebar-menu">
+                <a href="@Url.Action("Index", "OrcamentoMvc")" class="menu-item">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    <span>Orçamentos</span>
+                </a>
+                <a href="@Url.Action("Index", "SolicitacaoMvc")" class="menu-item active">
+                    <i class="fas fa-folder"></i>
+                    <span>Solicitações</span>
+                </a>
+                <a href="@Url.Action("Index", "ProdutoMvc")" class="menu-item">
+                    <i class="fas fa-box"></i>
+                    <span>Produtos</span>
+                </a>
+                <a href="@Url.Action("Index", "FornecedorMvc")" class="menu-item">
+                    <i class="fas fa-truck"></i>
+                    <span>Fornecedores</span>
+                </a>
+                <a href="@Url.Action("Index", "ClienteMvc")" class="menu-item">
+                    <i class="fas fa-user"></i>
+                    <span>Clientes</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Conteúdo principal -->
+        <div class="content">
+            <!-- Conteúdo da página -->
+            <div class="page-content">
+                <div class="page-header">
+                    <h2 class="page-title">Criar Nova Solicitacao</h2>
+                </div>
+
+                <div class="form-container">
+                    <form asp-action="Create" asp-controller="SolicitacaoMvc" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-group">
+                            <label for="Nome">Nome</label>
+                            <input type="text" class="form-control" id="Nome" name="Nome" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Preco">Preço</label>
+                            <input type="number" class="form-control" id="Preco" name="Preco" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Descrição">Descrição</label>
+                            <textarea class="form-control" id="Descricao" name="Descricao"></textarea>
+                        </div>
+
+                        <div class="buttons-container">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Salvar
+                            </button>
+                            <a href="@Url.Action("Index", "SolicitacaoMvc")" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Rodapé -->
+            <div class="footer">
+                <p>&copy; @DateTime.Now.Year - Focar Manutenções - Todos os direitos reservados</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

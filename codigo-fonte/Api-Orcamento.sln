@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35312.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api-Orcamento", "Api-Armazenamento-Documentos\Api-Orcamento.csproj", "{222FD96B-4315-4736-871B-4316A174124B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orcamento-test", "Orcamento-test\Orcamento-test.csproj", "{9A4165E1-AF86-4489-8E79-6D5B57E8B64A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{222FD96B-4315-4736-871B-4316A174124B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{222FD96B-4315-4736-871B-4316A174124B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{222FD96B-4315-4736-871B-4316A174124B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{222FD96B-4315-4736-871B-4316A174124B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A4165E1-AF86-4489-8E79-6D5B57E8B64A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A4165E1-AF86-4489-8E79-6D5B57E8B64A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A4165E1-AF86-4489-8E79-6D5B57E8B64A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A4165E1-AF86-4489-8E79-6D5B57E8B64A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B7096E3A-0012-48C6-8BB5-CB8CED815FD1}
+	EndGlobalSection
+EndGlobal

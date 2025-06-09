@@ -1,0 +1,6 @@
+@Api_Orcamento = http://localhost:5057
+
+GET {{Api_Orcamento_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

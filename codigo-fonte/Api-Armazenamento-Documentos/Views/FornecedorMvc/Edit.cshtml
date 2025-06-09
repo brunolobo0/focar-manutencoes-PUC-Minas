@@ -1,0 +1,602 @@
+﻿@model Api_Orcamento.ViewsModel.FornecedorViewModel
+@{
+    ViewData["Title"] = "Editar Fornecedor";
+}
+
+<style>
+    :root {
+        --primary: #222831;
+        --secondary: #75ABAE;
+        --light: #f5f5f5;
+        --dark: #1a1f25;
+        --text: #333333;
+        --text-light: #ffffff;
+        --border: #e0e0e0;
+        --hover: #63999c;
+        --sidebar-bg: #1d232a;
+        --menu-hover: #2e3942;
+        --fornecedor-accent: #5D8A73;
+        --fornecedor-light: #EEF5F0;
+        --fornecedor-hover: #4A7062;
+    }
+
+    body {
+        background-color: #f5f7fa;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+        color: var(--text);
+    }
+
+    /* Layout principal */
+    .main-container {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    /* Cabeçalho superior geral */
+    .top-header-container {
+        background-color: var(--primary);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 200;
+    }
+
+    .top-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        height: 60px;
+        max-width: 1400px;
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    .logo-area {
+        display: flex;
+        align-items: center;
+    }
+
+    .logo-placeholder {
+        display: flex;
+        align-items: center;
+    }
+
+    .logo-image {
+        width: 40px;
+        height: 40px;
+        background-color: var(--secondary);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 12px;
+    }
+
+        .logo-image i {
+            color: white;
+            font-size: 20px;
+        }
+
+    .logo-text {
+        color: var(--text-light);
+        font-weight: bold;
+        letter-spacing: 1px;
+        font-size: 18px;
+    }
+
+    .user-actions a {
+        color: var(--text-light);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        padding: 8px 15px;
+        border-radius: 5px;
+        transition: all 0.3s;
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+        .user-actions a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+    .user-actions i {
+        margin-right: 5px;
+    }
+
+    /* Conteúdo principal com sidebar */
+    .content-wrapper {
+        display: flex;
+        flex: 1;
+        margin-top: 60px;
+    }
+
+    /* Sidebar */
+    .sidebar {
+        width: 250px;
+        background-color: var(--sidebar-bg);
+        color: var(--text-light);
+        position: fixed;
+        height: calc(100vh - 60px);
+        left: 0;
+        top: 60px;
+        z-index: 100;
+        box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s;
+    }
+
+    .sidebar-menu {
+        padding: 20px 0;
+    }
+
+    .sidebar-header {
+        padding: 0 20px 15px 20px;
+        margin-bottom: 15px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+        .sidebar-header h3 {
+            color: var(--secondary);
+            font-size: 16px;
+            margin: 0;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+    .menu-item {
+        padding: 12px 20px;
+        display: flex;
+        align-items: center;
+        color: var(--text-light);
+        text-decoration: none;
+        transition: all 0.3s;
+        border-left: 4px solid transparent;
+        margin-bottom: 5px;
+    }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: var(--menu-hover);
+            border-left-color: var(--secondary);
+        }
+
+        .menu-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+            font-size: 18px;
+            color: var(--secondary);
+        }
+
+        .menu-item.active i {
+            color: white;
+        }
+
+    /* Conteúdo principal */
+    .content {
+        flex: 1;
+        margin-left: 250px;
+        padding: 20px;
+        transition: all 0.3s;
+        display: flex;
+        flex-direction: column;
+        min-height: calc(100vh - 60px);
+    }
+
+    /* Conteúdo da página */
+    .page-content {
+        flex: 1;
+    }
+
+    /* Estilos para a página de edição */
+    .form-container {
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    .page-header {
+        margin-bottom: 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .page-title {
+        font-weight: 600;
+        color: var(--primary);
+        font-size: 24px;
+        position: relative;
+        padding-left: 15px;
+        margin: 0;
+    }
+
+        .page-title:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 5px;
+            height: 24px;
+            width: 5px;
+            background: var(--fornecedor-accent);
+            border-radius: 3px;
+        }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: var(--primary);
+    }
+
+    .form-control {
+        display: block;
+        width: 100%;
+        padding: 10px 15px;
+        font-size: 16px;
+        line-height: 1.5;
+        color: var(--text);
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+        .form-control:focus {
+            border-color: var(--fornecedor-accent);
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(93, 138, 115, 0.25);
+        }
+
+    textarea.form-control {
+        min-height: 100px;
+        resize: vertical;
+    }
+
+    .form-row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: -10px;
+        margin-left: -10px;
+    }
+
+    .form-col {
+        flex: 0 0 50%;
+        max-width: 50%;
+        padding: 0 10px;
+    }
+
+    .form-actions {
+        margin-top: 30px;
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn {
+        display: inline-block;
+        font-weight: 500;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        user-select: none;
+        border: 1px solid transparent;
+        padding: 10px 20px;
+        font-size: 16px;
+        line-height: 1.5;
+        border-radius: 6px;
+        transition: all 0.15s ease-in-out;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .btn-primary {
+        background-color: var(--fornecedor-accent);
+        border-color: var(--fornecedor-accent);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 10px rgba(93, 138, 115, 0.25);
+    }
+
+        .btn-primary:hover {
+            background-color: var(--fornecedor-hover);
+            border-color: var(--fornecedor-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(93, 138, 115, 0.35);
+        }
+
+    .btn-secondary {
+        background-color: #f8f9fa;
+        border-color: #d3d9df;
+        color: #6c757d;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .btn-secondary:hover {
+            background-color: #e2e6ea;
+            border-color: #c1c9d0;
+            transform: translateY(-2px);
+        }
+
+    .btn i {
+        margin-right: 8px;
+    }
+
+    /* Rodapé */
+    .footer {
+        margin-top: auto;
+        padding: 15px 0;
+        background-color: #ffffff;
+        border-top: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 14px;
+        text-align: center;
+        color: #6e7a8a;
+    }
+
+    /* Input com ícone */
+    .input-with-icon {
+        position: relative;
+    }
+
+        .input-with-icon i {
+            position: absolute;
+            left: 12px;
+            top: 13px;
+            color: #adb5bd;
+        }
+
+        .input-with-icon input {
+            padding-left: 40px;
+        }
+
+    /* Feedback de validação */
+    .field-validation-error {
+        color: #dc3545;
+        font-size: 14px;
+        margin-top: 5px;
+        display: block;
+    }
+
+    .input-validation-error {
+        border-color: #dc3545;
+    }
+
+        .input-validation-error:focus {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+        }
+
+    /* Breadcrumb */
+    .breadcrumb {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 0;
+        margin-bottom: 20px;
+        list-style: none;
+        background-color: transparent;
+    }
+
+    .breadcrumb-item {
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        color: #6c757d;
+    }
+
+        .breadcrumb-item a {
+            color: var(--fornecedor-accent);
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+            .breadcrumb-item a:hover {
+                color: var(--fornecedor-hover);
+                text-decoration: underline;
+            }
+
+        .breadcrumb-item + .breadcrumb-item {
+            padding-left: 8px;
+        }
+
+            .breadcrumb-item + .breadcrumb-item::before {
+                display: inline-block;
+                padding-right: 8px;
+                color: #6c757d;
+                content: "/";
+            }
+
+        .breadcrumb-item.active {
+            color: #6c757d;
+        }
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<div class="main-container">
+    <!-- Cabeçalho superior com logo e botão de sair -->
+    <div class="top-header-container">
+        <div class="top-header">
+            <div class="logo-area">
+                <div class="logo-placeholder">
+                    <div class="logo-image">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <div class="logo-text">FOCAR MANUTENÇÕES</div>
+                </div>
+            </div>
+            <div class="user-actions">
+                <a href="@Url.Action("Login", "Autenticacao")"><i class="fas fa-sign-out-alt"></i> Sair</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-wrapper">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h3>Menu Principal</h3>
+            </div>
+            <div class="sidebar-menu">
+                <a href="@Url.Action("Index", "OrcamentoMvc")" class="menu-item">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    <span>Orçamentos</span>
+                </a>
+                <a href="@Url.Action("Index", "SolicitacaoMvc")" class="menu-item">
+                    <i class="fas fa-folder"></i>
+                    <span>Solicitações</span>
+                </a>
+                <a href="@Url.Action("Index", "ProdutoMvc")" class="menu-item">
+                    <i class="fas fa-box"></i>
+                    <span>Produtos</span>
+                </a>
+                <a href="@Url.Action("Index", "FornecedorMvc")" class="menu-item active">
+                    <i class="fas fa-truck"></i>
+                    <span>Fornecedores</span>
+                </a>
+                <a href="@Url.Action("Index", "ClienteMvc")" class="menu-item">
+                    <i class="fas fa-user"></i>
+                    <span>Clientes</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Conteúdo principal -->
+        <div class="content">
+            <!-- Conteúdo da página -->
+            <div class="page-content">
+                <!-- Breadcrumb -->
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="@Url.Action("Index", "FornecedorMvc")"><i class="fas fa-home"></i> Início</a></li>
+                        <li class="breadcrumb-item"><a href="@Url.Action("Index", "FornecedorMvc")">Fornecedores</a></li>
+                        <li class="breadcrumb-item active">Editar Fornecedor</li>
+                    </ol>
+                </nav>
+
+                <div class="page-header">
+                    <h2 class="page-title">Editar Fornecedor</h2>
+                </div>
+
+                <div class="form-container">
+                    <form asp-action="Edit" asp-controller="FornecedorMvc" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="Id" value="@Model.Id" />
+
+                        <div class="form-row">
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="NomeFantasia">Nome Fantasia</label>
+                                    <div class="input-with-icon">
+                                        <i class="fas fa-building"></i>
+                                        <input type="text" class="form-control" id="NomeFantasia" name="NomeFantasia" value="@Model.NomeFantasia" required />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="RazaoSocial">Razão Social</label>
+                                    <div class="input-with-icon">
+                                        <i class="far fa-building"></i>
+                                        <input type="text" class="form-control" id="RazaoSocial" name="RazaoSocial" value="@Model.RazaoSocial" required />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="Cnpj">CNPJ</label>
+                                    <div class="input-with-icon">
+                                        <i class="fas fa-id-card"></i>
+                                        <input type="text" class="form-control" id="Cnpj" name="Cnpj" value="@Model.Cnpj" required />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="Email">Email</label>
+                                    <div class="input-with-icon">
+                                        <i class="fas fa-envelope"></i>
+                                        <input type="email" class="form-control" id="Email" name="Email" value="@Model.Email" required />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="InscricaoEstadual">Inscrição Estadual</label>
+                                    <div class="input-with-icon">
+                                        <i class="fas fa-file-alt"></i>
+                                        <input type="text" class="form-control" id="InscricaoEstadual" name="InscricaoEstadual" value="@Model.InscricaoEstadual" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="InscricaoMunicipal">Inscrição Municipal</label>
+                                    <div class="input-with-icon">
+                                        <i class="fas fa-file-alt"></i>
+                                        <input type="text" class="form-control" id="InscricaoMunicipal" name="InscricaoMunicipal" value="@Model.InscricaoMunicipal" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="Telefone">Telefone</label>
+                                    <div class="input-with-icon">
+                                        <i class="fas fa-phone"></i>
+                                        <input type="text" class="form-control" id="Telefone" name="Telefone" value="@Model.Telefone" required />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <!-- Espaço reservado para futuros campos adicionais -->
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Observacoes">Observações</label>
+                            <textarea class="form-control" id="Observacoes" name="Observacoes" rows="4">@Model.Observacoes</textarea>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Salvar Alterações
+                            </button>
+                            <a href="@Url.Action("Index", "FornecedorMvc")" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Rodapé -->
+            <div class="footer">
+                <p>&copy; @DateTime.Now.Year - Focar Manutenções - Todos os direitos reservados</p>
+            </div>
+        </div>
+    </div>
+</div>

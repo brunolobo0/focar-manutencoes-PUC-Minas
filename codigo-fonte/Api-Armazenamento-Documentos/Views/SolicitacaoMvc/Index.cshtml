@@ -1,0 +1,604 @@
+﻿@model List<Api_Orcamento.ViewModels.SolicitacaoViewModel>
+
+<style>
+    :root {
+        --primary: #222831;
+        --secondary: #75ABAE;
+        --light: #f5f5f5;
+        --dark: #1a1f25;
+        --text: #333333;
+        --text-light: #ffffff;
+        --border: #e0e0e0;
+        --hover: #63999c;
+        --sidebar-bg: #1d232a;
+        --menu-hover: #2e3942;
+        --fornecedor-accent: #5D8A73;
+        --fornecedor-light: #EEF5F0;
+        --fornecedor-hover: #4A7062;
+    }
+
+    body {
+        background-color: #f5f7fa;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+        color: var(--text);
+    }
+
+    /* Layout principal */
+    .main-container {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    /* Cabeçalho superior geral */
+    .top-header-container {
+        background-color: var(--primary);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 200;
+    }
+
+
+
+    /*FIM DO CSS PARA PESQUISA*/
+
+    .search-form-container {
+        margin-bottom: 25px; /* Espaço abaixo do campo de pesquisa */
+    }
+
+    .input-group {
+        display: flex;
+        flex-wrap: nowrap;
+    }
+
+        .input-group .form-control {
+            border-right: none;
+            border-radius: 6px 0 0 6px;
+            flex-grow: 1;
+            padding: 0 10px;
+        }
+
+    .input-group-append {
+        display: flex;
+    }
+
+    .input-group .btn {
+        border-radius: 0;
+        margin-left: -1px;
+        z-index: 1;
+    }
+
+
+    .input-group .btn-outline-secondary {
+        background-color: var(--secondary); /* Cor de fundo para o botão de pesquisa */
+        border-color: var(--secondary);
+        color: var(--text-light);
+    }
+
+        .input-group .btn-outline-secondary:hover {
+            background-color: var(--hover);
+            border-color: var(--hover);
+            color: var(--text-light);
+        }
+
+    .input-group .btn-outline-danger {
+        background-color: #dc3545; /* botão Limpar */
+        border-color: #dc3545;
+        color: white;
+        margin-left: 5px; /* Espaço entre os botões "Pesquisar" e "Limpar" */
+        border-radius: 6px;
+    }
+
+        .input-group .btn-outline-danger:hover {
+            background-color: #c82333;
+            border-color: #c82333;
+        }
+
+
+    /*FIM DO CSS PARA PESQUISA*/
+
+
+
+    .top-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        height: 60px;
+        max-width: 1400px;
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    .logo-area {
+        display: flex;
+        align-items: center;
+    }
+
+    .logo-placeholder {
+        display: flex;
+        align-items: center;
+    }
+
+    .logo-image {
+        width: 40px;
+        height: 40px;
+        background-color: var(--secondary);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 12px;
+    }
+
+        .logo-image i {
+            color: white;
+            font-size: 20px;
+        }
+
+    .logo-text {
+        color: var(--text-light);
+        font-weight: bold;
+        letter-spacing: 1px;
+        font-size: 18px;
+    }
+
+    .user-actions a {
+        color: var(--text-light);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        padding: 8px 15px;
+        border-radius: 5px;
+        transition: all 0.3s;
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+        .user-actions a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+    .user-actions i {
+        margin-right: 5px;
+    }
+
+    /* Conteúdo principal com sidebar */
+    .content-wrapper {
+        display: flex;
+        flex: 1;
+        margin-top: 60px;
+    }
+
+    /* Sidebar */
+    .sidebar {
+        width: 250px;
+        background-color: var(--sidebar-bg);
+        color: var(--text-light);
+        position: fixed;
+        height: calc(100vh - 60px);
+        left: 0;
+        top: 60px;
+        z-index: 100;
+        box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s;
+    }
+
+    .sidebar-menu {
+        padding: 20px 0;
+    }
+
+    .sidebar-header {
+        padding: 0 20px 15px 20px;
+        margin-bottom: 15px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+        .sidebar-header h3 {
+            color: var(--secondary);
+            font-size: 16px;
+            margin: 0;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+    .menu-item {
+        padding: 12px 20px;
+        display: flex;
+        align-items: center;
+        color: var(--text-light);
+        text-decoration: none;
+        transition: all 0.3s;
+        border-left: 4px solid transparent;
+        margin-bottom: 5px;
+    }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: var(--menu-hover);
+            border-left-color: var(--secondary);
+        }
+
+        .menu-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+            font-size: 18px;
+            color: var(--secondary);
+        }
+
+        .menu-item.active i {
+            color: white;
+        }
+
+    /* Conteúdo principal */
+    .content {
+        flex: 1;
+        margin-left: 250px;
+        padding: 20px;
+        transition: all 0.3s;
+        display: flex;
+        flex-direction: column;
+        min-height: calc(100vh - 60px);
+    }
+
+    /* Conteúdo da página */
+    .page-content {
+        flex: 1;
+    }
+
+    .page-header {
+        padding-top: 20px;
+        margin-bottom: 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .page-title {
+        font-weight: 600;
+        color: var(--primary);
+        font-size: 24px;
+        position: relative;
+        padding-left: 15px;
+        margin: 0;
+    }
+
+        .page-title:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 5px;
+            height: 24px;
+            width: 5px;
+            background: var(--fornecedor-accent);
+            border-radius: 3px;
+        }
+
+    .btn-primary {
+        background-color: #5D8A73; 
+        border-color: #5D8A73;
+        padding: 8px 20px;
+        border-radius: 6px;
+        box-shadow: 0 4px 10px #5D8A7340; 
+        transition: all 0.3s;
+        color: #FFFFFF;
+        font-weight: 500;
+    }
+
+        .btn-primary:hover {
+            background-color: #4A7062; 
+            border-color: #4A7062;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px #5D8A7359; 
+        }
+
+
+    .table-container {
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+        padding: 5px;
+        margin-bottom: 30px;
+        overflow: hidden;
+    }
+
+    .table {
+        margin-bottom: 0;
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .table th {
+            background-color: var(--fornecedor-light);
+            color: var(--fornecedor-accent);
+            font-weight: 600;
+            font-size: 14px;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+        }
+
+        .table td {
+            padding: 12px 20px;
+            vertical-align: middle;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .table tbody tr {
+            transition: background-color 0.2s;
+        }
+
+            .table tbody tr:hover {
+                background-color: #f8fcfa;
+            }
+
+    .btn {
+        display: inline-block;
+        font-weight: 400;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        user-select: none;
+        border: 1px solid transparent;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        border-radius: 0.25rem;
+        transition: all 0.15s ease-in-out;
+        text-decoration: none;
+    }
+
+    .btn-info, .btn-warning, .btn-danger {
+        border-radius: 6px;
+        padding: 6px 12px;
+        margin: 0 3px;
+        transition: all 0.2s;
+        color: white;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .btn-info {
+        background-color: var(--fornecedor-accent);
+        border-color: var(--fornecedor-accent);
+    }
+
+        .btn-info:hover {
+            background-color: var(--fornecedor-hover);
+            border-color: var(--fornecedor-hover);
+            box-shadow: 0 3px 8px rgba(93, 138, 115, 0.3);
+        }
+
+        .btn-info i {
+            margin-right: 5px;
+        }
+
+    .btn-warning {
+        background-color: #f0ad4e;
+        border-color: #f0ad4e;
+    }
+
+        .btn-warning:hover {
+            background-color: #ec971f;
+            border-color: #ec971f;
+            box-shadow: 0 3px 8px rgba(240, 173, 78, 0.3);
+        }
+
+        .btn-warning i {
+            margin-right: 5px;
+        }
+
+    .btn-danger {
+        background-color: #d9534f;
+        border-color: #d9534f;
+    }
+
+        .btn-danger:hover {
+            background-color: #c9302c;
+            border-color: #c9302c;
+            box-shadow: 0 3px 8px rgba(217, 83, 79, 0.3);
+        }
+
+        .btn-danger i {
+            margin-right: 5px;
+        }
+
+    .empty-message {
+        padding: 40px 0;
+        text-align: center;
+        color: #8a94a6;
+    }
+
+    .td-nome {
+        font-weight: 500;
+        color: var(--fornecedor-accent);
+    }
+
+    .td-preco a {
+        color: var(--fornecedor-accent);
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+
+        .td-email a:hover {
+            color: var(--fornecedor-hover);
+            text-decoration: underline;
+        }
+
+    .td-phone {
+        color: #6e7a8a;
+    }
+
+    .td-cnpj {
+        font-family: monospace;
+        letter-spacing: 1px;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 500;
+        background-color: var(--fornecedor-light);
+        color: var(--fornecedor-accent);
+    }
+
+    .table-action-cell {
+        text-align: right;
+        white-space: nowrap;
+    }
+
+    /* Rodapé */
+    .footer {
+        margin-top: auto;
+        padding: 15px 0;
+        background-color: #ffffff;
+        border-top: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 14px;
+        text-align: center;
+        color: #6e7a8a;
+    }
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<div class="main-container">
+    <!-- Cabeçalho superior com logo e botão de sair -->
+    <div class="top-header-container">
+        <div class="top-header">
+            <div class="logo-area">
+                <div class="logo-placeholder">
+                    <div class="logo-image">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <div class="logo-text">FOCAR MANUTENÇÕES</div>
+                </div>
+            </div>
+            <div class="user-actions">
+                <a href="@Url.Action("Login", "Autenticacao")"><i class="fas fa-sign-out-alt"></i> Sair</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-wrapper">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h3>Menu Principal</h3>
+            </div>
+            <div class="sidebar-menu">
+                <a href="@Url.Action("Index", "OrcamentoMvc")" class="menu-item">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    <span>Orçamentos</span>
+                </a>
+                <a href="@Url.Action("Index", "SolicitacaoMvc")" class="menu-item active">
+                    <i class="fas fa-folder"></i>
+                    <span>Solicitações</span>
+                </a>
+                <a href="@Url.Action("Index", "ProdutoMvc")" class="menu-item">
+                    <i class="fas fa-box"></i>
+                    <span>Produtos</span>
+                </a>
+                <a href="@Url.Action("Index", "FornecedorMvc")" class="menu-item">
+                    <i class="fas fa-truck"></i>
+                    <span>Fornecedores</span>
+                </a>
+                <a href="@Url.Action("Index", "ClienteMvc")" class="menu-item">
+                    <i class="fas fa-user"></i>
+                    <span>Clientes</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Conteúdo principal -->
+        <div class="content">
+            <!-- Conteúdo da página -->
+            <div class="page-content">
+                <div class="page-header">
+                    <h2 class="page-title">Lista de Solicitações</h2>
+                    <a href="@Url.Action("Create", "SolicitacaoMvc")" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Nova Solicitação
+                    </a>
+                </div>
+                <div class="search-form-container">
+                    <form method="get" action="@Url.Action("Index", "SolicitacaoMvc")">
+                        <div class="input-group">
+                            <input type="text" name="termoBusca" class="form-control" placeholder="Pesquisar por Nome, Preço, Descrição..." value="@ViewContext.HttpContext.Request.Query["termoBusca"]" />
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-outline-secondary">
+                                    <i class="fas fa-search"></i> Pesquisar
+                                </button>
+                                <a href="@Url.Action("Index", "SolicitacaoMvc")" class="btn btn-outline-danger">
+                                    <i class="fas fa-times"></i> Limpar
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Preço</th>
+                                <th>Descrição</th>
+                                <th>Data Criação</th>
+                                <th>Data Atualização</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var o in Model)
+                            {
+                                <tr>
+                                    <td class="td-name">@o.Nome</td>
+                                    <td class="td-cnpj">@o.Preco</td>
+                                    <td class="td-name">@o.Descricao</td>
+                                    <td>@o.DataCriacao.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td>@o.DataAtualizacao?.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
+
+                                    <td>
+                                        <a href="@Url.Action("Details", "SolicitacaoMvc", new { id = o.Id })" class="btn btn-info">
+                                            <i class="fas fa-eye"></i> Ver
+                                        </a>
+                                        <a href="@Url.Action("Edit", "SolicitacaoMvc", new { id = o.Id })" class="btn btn-warning">
+                                            <i class="fas fa-edit"></i> Editar
+                                        </a>
+                                        <a href="@Url.Action("Delete", "SolicitacaoMvc", new { id = o.Id })" class="btn btn-danger">
+                                            <i class="fas fa-trash"></i> Excluir
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                            @if (Model == null || !Model.Any())
+                            {
+                                <tr>
+                                    <td colspan="4">
+                                        <div class="empty-message">
+                                            <i class="fas fa-tools fa-3x mb-3"></i>
+                                            <p>Nenhuma Solicitacao encontrada</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Rodapé -->
+            <div class="footer">
+                <p>&copy; @DateTime.Now.Year - Focar Manutenções - Todos os direitos reservados</p>
+            </div>
+        </div>
+    </div>
+</div>
